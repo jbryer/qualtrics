@@ -1,0 +1,20 @@
+Package: qualtrics
+Type: Package
+Title: Qualtrics Survey Data Access
+Version: 0.9.1
+Date: 2012-01-26
+Author: Jason Bryer <jbryer@excelsior.edu>
+Maintainer: Jason Bryer <jbryer@excelsior.edu>
+Depends:
+    utils,
+    XML
+Description: This R project/package provides functions that wrap the
+    Qualtrics.com web survey tool. API access is required and requests can be
+    made to Qualtrics Support. Functions include extracting survey data into R
+    as well as managing panels and sending surveys.
+License: GPL
+LazyLoad: yes
+URL: http://jbryer.github.com/qualtrics
+Collate:
+    'panels.R'
+    'surveys.R'

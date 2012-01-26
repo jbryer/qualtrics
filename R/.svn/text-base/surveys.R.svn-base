@@ -1,0 +1,65 @@
+########## QUALTICS FUNCTIONS ############################################################
+# For Qualtrics functions dates startDate and endDate format: YYYY-MM-DD
+parseXMLResponse <- function(doc) {
+	fields = xmlApply(doc, names)
+	#unique(unlist(fields))
+	ans = as.data.frame(replicate(length(unique(unlist(fields))), character(xmlSize(doc))), stringsAsFactors=FALSE)
+	names(ans) = unique(unlist(fields))
+	sapply(1:xmlSize(doc), 
+		function(i) { 
+			c = doc[[i]] #$element
+			ans[i, names(c)] <<- xmlSApply(c, xmlValue) 
+		})
+	ans
+}
+
+########## Survey Requests #########
+getSurveyResults <- function(username, password, surveyid, truncNames=20, startDate=NULL, endDate=NULL) {
+	url = paste("http://new.qualtrics.com/Server/RestApi.php?Request=getResponseData&User=",
+		username, "&Password=", password, "&SurveyID=", surveyid, "&Format=CSV", 
+		ifelse(is.null(startDate), "", paste("&StartDate=", startDate, sep="")), 
+		ifelse(is.null(endDate), "", paste("&EndDate=", endDate, sep="")),
+		sep="")
+	t = read.csv(url, skip=1)
+	t$X = NULL
+	n = strsplit(names(t), "....", fixed=TRUE)
+	for(i in 1:ncol(t)) {
+		names(t)[i] = n[[i]][length(n[[i]])]
+		if(nchar(names(t)[i]) > truncNames) {
+			names(t)[i] = substr(names(t)[i], 1, truncNames)
+		}
+	}
+	t
+}
+
+getSurveys <- function(username, password) {
+	url = paste("http://new.qualtrics.com/Server/RestApi.php?Request=getSurveys&User=",
+		username, "&Password=", password, sep="")
+	doc = xmlRoot(xmlTreeParse(url))
+	parseXMLResponse(doc[[1]])
+}
+
+getSurvey <- function(username, password, surveyid) {
+	url = paste("http://new.qualtrics.com/Server/RestApi.php?Request=getSurvey&User=",
+		username, "&Password=", password, "&SurveyID=", surveyid, sep="")
+	xmlRoot(xmlTreeParsedoc(url))
+}
+
+getSurveyName <- function(username, password, surveyid) {
+	url = paste("http://new.qualtrics.com/Server/RestApi.php?Request=getSurveyName&User=",
+		username, "&Password=", password, "&SurveyID=", surveyid, sep="")
+	doc = xmlRoot(xmlTreeParsedoc(url))
+	fields = names(doc)
+	ans = as.data.frame(replicate(length(unique(unlist(fields))), character()), stringsAsFactors=FALSE)
+	names(ans) = unlist(names(fields))
+	sapply(1:xmlSize(doc), 
+		function(i) { 
+			c = doc[[i]] #$element
+			if(length(xmlValue(c)) > 0) {
+				ans[1, i] <<- xmlValue(c)
+			}
+		})
+	ans
+}
+
+

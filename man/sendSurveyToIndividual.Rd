@@ -1,0 +1,40 @@
+\name{sendSurveyToIndividual}
+\alias{sendSurveyToIndividual}
+\title{Sends a survey to the given recipient.}
+\usage{
+  sendSurveyToIndividual(username, password, surveyId,
+    sendDate, fromEmail, fromName, subject, messageId,
+    messageLibraryId, panelId, panelLibraryId, recipientId)
+}
+\arguments{
+  \item{username}{the Qualtrics username.}
+
+  \item{password}{the Qualtrics password.}
+
+  \item{surveyId}{the Qualtrics surveyId.}
+
+  \item{sendDate}{the date to send the invitation.}
+
+  \item{fromEmail}{the email address of the sender.}
+
+  \item{fromName}{the name of the sender.}
+
+  \item{subject}{the subject of the email to send.}
+
+  \item{messageId}{the Qualtrics message id from the
+  library.}
+
+  \item{messageLibraryId}{the Qualtrics library id
+  containing the message to send.}
+
+  \item{panelId}{the Qualtrics panel id.}
+
+  \item{panelLibraryId}{the Qualtrics library id containing
+  the panel.}
+
+  \item{recipientId}{the id of the recipient in the panel.}
+}
+\description{
+  Sends a survey to the given recipient.
+}
+
