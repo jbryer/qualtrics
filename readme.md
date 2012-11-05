@@ -13,4 +13,4 @@ Login credentials are required. The `varEntryDialog` provides a user dialog for 
 
 You can retrieve the list of survey in your account with the `getSurveys` function (note output has been truncated).
 
-	> getSurveys(login$Username, login$Password)    	responses SurveyType           SurveyID                                 	SurveyName    1       117         SS SV_39RKJNe1htAdR4g        Faculty Survey of Student 	Readiness    2       400         SS SV_3rQruV2eBPG7uFS           Staff Satisfaction Survey - 2011
+	> getSurveys(login$Username, login$Password)    	responses SurveyType               SurveyID                            SurveyName               1         117  SS SV_39RKJNe1htAdR4g  Faculty Survey of Student 	Readiness               2         400  SS SV_3rQruV2eBPG7uFS      Staff Satisfaction Survey - 2011
