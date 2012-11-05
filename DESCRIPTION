@@ -18,3 +18,5 @@ URL: http://jbryer.github.com/qualtrics
 Collate:
     'panels.R'
     'surveys.R'
+    'VariableUI.r'
+    'parseXMLResponse.r'
