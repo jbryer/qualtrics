@@ -7,13 +7,23 @@
 #' @param startDate beginning date range for results returned.
 #' @param endDate ending date range for results returned.
 #' @export
-getSurveyResults <- function(username, password, surveyid, 
-							 truncNames=20, startDate=NULL, endDate=NULL) {
-	url = paste("http://eu.qualtrics.com/Server/RestApi.php?Request=getResponseData&User=",
-		username, "&Password=", password, "&SurveyID=", surveyid, "&Format=CSV", 
-		ifelse(is.null(startDate), "", paste("&StartDate=", startDate, sep="")), 
-		ifelse(is.null(endDate), "", paste("&EndDate=", endDate, sep="")),
-		sep="")
+getSurveyResults <- function(username, token, surveyid, 
+			 	truncNames=20, startDate=NULL, endDate=NULL) {
+ 	require(RCurl)
+	url = paste(
+	    "https://survey.qualtrics.com/WRAPI/ControlPanel/api.php?Request=getLegacyResponseData&User=", 
+	    username,
+	    "&Token=", token,
+	    "&SurveyID=", surveyid,
+	    "&Version=2.0",
+	    "&Format=CSV",
+	    sep = "")
+	  
+	urlcontents <- getURL(url)
+	urlcontents <- gsub("<ef><bb><bf>", "", urlcontents)
+	urlcontents <- strsplit(urlcontents, "\\n")[[1]]
+	t <- read.csv(text=urlcontents[-1])
+
 	t = read.csv(url, skip=1)
 	t$X = NULL
 	n = strsplit(names(t), "....", fixed=TRUE)
