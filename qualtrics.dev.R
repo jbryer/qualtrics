@@ -11,3 +11,9 @@ check('qualtrics')
 library(qualtrics)
 
 ls('package:qualtrics')
+
+##### Testing #####
+source('qualtrics/config.R')
+
+results <- getSurveyResults(qualtrics.token, surveyid, qualtrics.baseurl)
+nrow(results)
