@@ -4,12 +4,7 @@
 \alias{getSurveys}
 \title{Returns a list of surveys available for the given user.}
 \usage{
-getSurveys(username, password)
-}
-\arguments{
-\item{username}{the Qualtrics username.}
-
-\item{password}{the Qualtrics password.}
+getSurveys(qualtrics.token, qualtrics.baseurl = "https://qualtrics.com")
 }
 \description{
 Returns a list of surveys available for the given user.

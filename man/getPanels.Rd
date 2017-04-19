@@ -4,14 +4,18 @@
 \alias{getPanels}
 \title{Returns the survey panels in the given library.}
 \usage{
-getPanels(username, password, libraryid)
+getPanels(qualtrics.token, qualtrics.baseurl = "https://qualtrics.com",
+  verbose = FALSE)
 }
 \arguments{
-\item{username}{the Qualtrics username.}
+\item{qualtrics.token}{authentication token.}
 
-\item{password}{the Qualtrics password.}
+\item{qualtrics.baseurl}{The base URL for the Qualtrics API. See 
+https://api.qualtrics.com/docs/root-url for more information about
+how to determine your base URL.}
 
-\item{libraryid}{the Qualtrics library id.}
+\item{verbose}{if TRUE, a statement will be printed when retrieving 
+subsequent pages.}
 }
 \description{
 Returns the survey panels in the given library.

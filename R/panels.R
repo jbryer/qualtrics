@@ -1,17 +1,68 @@
+#' Returns the mailing lists in the given library.
+#'
+#' @param qualtrics.token authentication token.
+#' @param qualtrics.baseurl The base URL for the Qualtrics API. See 
+#'        https://api.qualtrics.com/docs/root-url for more information about
+#'        how to determine your base URL.
+#' @param verbose if TRUE, a statement will be printed when retrieving 
+#'        subsequent pages.
+#' @export
+getMailingLists <- function(...) {
+	return(getPanels(...))
+}
+
 #' Returns the survey panels in the given library.
 #'
-#' @param username the Qualtrics username.
-#' @param password the Qualtrics password.
-#' @param libraryid the Qualtrics library id.
+#' @param qualtrics.token authentication token.
+#' @param qualtrics.baseurl The base URL for the Qualtrics API. See 
+#'        https://api.qualtrics.com/docs/root-url for more information about
+#'        how to determine your base URL.
+#' @param verbose if TRUE, a statement will be printed when retrieving 
+#'        subsequent pages.
 #' @export
-getPanels <- function(username, password, libraryid) {
-	url = paste("http://eu.qualtrics.com/Server/RestApi.php?Request=getPanels",
-				"&User=", username, 
-				"&Password=", password, 
-				"&LibraryID=", libraryid, 
-				sep="")
-	doc = xmlRoot(xmlTreeParse(url))
-	parseXMLResponse(doc[[1]])
+getPanels <- function(qualtrics.token,
+					  qualtrics.baseurl = "https://qualtrics.com",
+					  verbose = FALSE) {
+	txt <- GET(paste0(qualtrics.baseurl, '/API/v3/mailinglists/'),
+			   add_headers('content-type' = 'application/json',
+			   			'x-api-token' = qualtrics.token)
+	)
+	if (txt$status_code != 200) {
+		stop(paste0('Error connecting to ', txt$url, '\nError: ', txt$status_code))
+	}
+
+	lists <- content(txt)[[1]]
+	mailinglists <- data.frame(libraryId = character(),
+							   id = character(),
+							   name = character(),
+							   category = character(),
+							   # folder = character(),
+							   stringsAsFactors = FALSE)
+	while(length(lists$elements) > 0) {
+		for(i in seq_len(length(lists$elements))) {
+			mailinglists <- rbind(mailinglists, data.frame(
+				libraryId = lists$elements[[i]]$libraryId,
+				id = lists$elements[[i]]$id,
+				name = lists$elements[[i]]$name,
+				category = lists$elements[[i]]$category,
+				# folder = lists$elements[[i]]$folder,
+				stringsAsFactors = FALSE
+			))
+		}
+		if(!is.null(lists$nextPage)) {
+			if(verbose) { print(lists$nextPage) }
+			txt <- GET(lists$nextPage,
+					   add_headers('content-type' = 'application/json',
+					   			'x-api-token' = qualtrics.token) )
+			if (txt$status_code != 200) {
+				stop(paste0('Error connecting to ', txt$url, '\nError: ', txt$status_code))
+			}
+			lists <- content(txt)[[1]]
+		} else {
+			lists$elements <- list()
+		}
+	}
+	return(mailinglists)
 }
 
 #' Returns the survey invitees for the given panel.

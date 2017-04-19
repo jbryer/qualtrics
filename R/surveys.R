@@ -77,10 +77,9 @@ getSurveyResults <- function(qualtrics.token,
 
 #' Returns a list of surveys available for the given user.
 #'
-#' @param username the Qualtrics username.
-#' @param password the Qualtrics password.
 #' @export
-getSurveys <- function(username, password) {
+getSurveys <- function(qualtrics.token,
+					   qualtrics.baseurl = "https://qualtrics.com") {
 	txt <- GET(
 		paste0(qualtrics.baseurl, '/API/v3/surveys'),
 		add_headers('x-api-token' = qualtrics.token),
@@ -97,6 +96,8 @@ getSurveys <- function(username, password) {
 						  lastModified = character(),
 						  isActive = logical(),
 						  stringsAsFactors = FALSE)
+	
+	# TODO: look for nextPage element to load more results
 	
 	for(i in seq_len(length(results[[1]]$elements))) {
 		surveys <- rbind(surveys, data.frame(

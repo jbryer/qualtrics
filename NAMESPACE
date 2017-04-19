@@ -2,6 +2,7 @@
 
 export(addRecipient)
 export(createPanel)
+export(getMailingLists)
 export(getPanel)
 export(getPanelMemberCount)
 export(getPanels)
